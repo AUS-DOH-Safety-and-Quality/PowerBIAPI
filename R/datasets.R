@@ -132,41 +132,22 @@ execute_xmla_query <- function(workspace, dataset, query, powerbi_token) {
   xmla_server <- get_xmla_server(capacity_region, capacity_id, powerbi_token)
   xmla_token <- get_xmla_token(capacity_id, workspace_id, powerbi_token)
 
-  xmla_url <- paste0("https://", xmla_server$clusterFQDN, "/webapi/xmla")
-  xmla_auth <- httr::add_headers(Authorization = paste("MwcToken", xmla_token))
-  xmla_body <- glue::glue('
-    <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
-    <Header>
-      <BeginSession soap:mustUnderstand="1" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:schemas-microsoft-com:xml-analysis" />
-      <Version Sequence="922" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine/2" />
-    </Header>
-    <Body>
-      <Execute xmlns="urn:schemas-microsoft-com:xml-analysis">
-        <Command><Statement>{query}</Statement></Command>
-        <Properties>
-          <PropertyList>
-            <Catalog>{dataset}</Catalog>
-            <Format>Tabular</Format>
-          </PropertyList>
-        </Properties>
-      </Execute>
-    </Body>
-  </Envelope>')
-
-  xmla_request <- httr::POST(url = xmla_url,
-                             config = xmla_auth,
-                             body = as.character(xmla_body),
-                             httr::add_headers(.headers = c(
-                               "x-ms-xmlaserver"=xmla_server$coreServerName,
-                               "x-ms-xmlacaps-negotiation-flags"="0,0,0,1,1",
-                               "Content-Type"="text/xml",
-                               "x-ms-request-registration-id"=uuid::UUIDgenerate(),
-                               "x-ms-xmlaclienttraits"=1,
-                               "x-ms-xmladedicatedconnection"=0,
-                               "x-ms-accepts-continuations"=1,
-                               "x-ms-round-trip-id"=0
-                             ))
-  )
-  request_results <- httr::content(xmla_request, type="text/xml", encoding = "UTF-8")
+  xmla_request <-
+    httr::POST(
+      url = paste0("https://", xmla_server$clusterFQDN, "/webapi/xmla"),
+      config = httr::add_headers(Authorization = paste("MwcToken", xmla_token)),
+      body = construct_xmla_query(dataset, query),
+      httr::add_headers(.headers = c(
+        "x-ms-xmlaserver" = xmla_server$coreServerName,
+        "x-ms-xmlacaps-negotiation-flags" = "0,0,0,1,1",
+        "Content-Type" = "text/xml",
+        "x-ms-request-registration-id" = uuid::UUIDgenerate(),
+        "x-ms-xmlaclienttraits" = 1,
+        "x-ms-xmladedicatedconnection" = 0,
+        "x-ms-accepts-continuations" = 1,
+        "x-ms-round-trip-id" = 0
+      ))
+    )
+  request_results <- httr::content(xmla_request, encoding = "UTF-8")
   rowset_to_df(request_results)
 }

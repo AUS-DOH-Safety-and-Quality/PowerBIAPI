@@ -52,6 +52,28 @@ get_xmla_server <- function(capacity_region, capacity_id, powerbi_token) {
   httr::content(server_request)
 }
 
+construct_xmla_query <- function(dataset, query) {
+  glue::glue('
+    <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+      <Header>
+        <BeginSession soap:mustUnderstand="1" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:schemas-microsoft-com:xml-analysis" />
+        <Version Sequence="922" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine/2" />
+      </Header>
+      <Body>
+        <Execute xmlns="urn:schemas-microsoft-com:xml-analysis">
+          <Command><Statement>{query}</Statement></Command>
+          <Properties>
+            <PropertyList>
+              <Catalog>{dataset}</Catalog>
+              <Format>Tabular</Format>
+            </PropertyList>
+          </Properties>
+        </Execute>
+      </Body>
+    </Envelope>'
+  )
+}
+
 construct_rest_query <- function(query) {
   glue::glue(
     '{{
