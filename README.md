@@ -4,6 +4,8 @@
 # PowerBIAPI
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/AUS-DOH-Safety-and-Quality/PowerBIAPI/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AUS-DOH-Safety-and-Quality/PowerBIAPI/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The PowerBIAPI package provides a native R interface to the PowerBI REST
@@ -29,12 +31,32 @@ df_table <- get_dataflow_table(workspace = "Workspace Name",
 
 ## Downloading Dataset Tables
 
-### XMLA
+``` r
+# XMLA API
+ds_table_xmla <- get_dataset_table(workspace = "Workspace Name",
+                                    dataset = "Dataset Name",
+                                    table = "Table Name",
+                                    method = "XMLA")
+
+# REST API
+ds_table_rest <- get_dataset_table(workspace = "Workspace Name",
+                                    dataset = "Dataset Name",
+                                    table = "Table Name",
+                                    method = "REST")
+```
+
+## Executing DAX Queries
 
 ``` r
-ds_table <- get_dataset_table_xmla(workspace = "Workspace Name",
-                                   dataset = "Dataset Name",
-                                   table = "Table Name")
+# XMLA API
+dax_result_xmla <- execute_xmla_query(workspace = "Workspace Name",
+                                      dataset = "Dataset Name",
+                                      query = "Custom DAX query")
+
+# REST API
+dax_result_rest <- execute_rest_query(workspace = "Workspace Name",
+                                      dataset = "Dataset Name",
+                                      query = "Custom DAX query")
 ```
 
 ## Authentication
@@ -60,8 +82,8 @@ powerbi_token <- get_powerbi_token(
   password = ""
 )
 
-ds_table <- get_dataset_table_xmla(workspace = "Workspace Name",
-                                   dataset = "Dataset Name",
-                                   table = "Table Name",
-                                   powerbi_token = powerbi_token)
+ds_table <- get_dataset_table(workspace = "Workspace Name",
+                               dataset = "Dataset Name",
+                               table = "Table Name",
+                               powerbi_token = powerbi_token)
 ```

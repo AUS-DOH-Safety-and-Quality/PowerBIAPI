@@ -8,7 +8,7 @@
 #'
 #' @importFrom AzureAuth get_azure_token
 #' @importFrom httr add_headers GET POST content_type_json content
-#' @importFrom purrr map_dfr pmap keep map_chr
+#' @importFrom purrr map_dfr pmap keep map_chr modify_if
 #' @importFrom readr read_csv
 #' @importFrom glue glue
 #' @importFrom jsonlite toJSON
