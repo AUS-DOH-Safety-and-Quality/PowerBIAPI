@@ -1,0 +1,68 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# PowerBIAPI
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The PowerBIAPI package provides a native R interface to the PowerBI REST and XMLA APIs for accessing Dataflows and Datasets. No external dependencies (e.g., PowerShell or the XMLA client libraries) are required.
+
+## Installation
+
+You can install the development version of PowerBIAPI like so:
+
+```{r, eval=FALSE}
+devtools::install_github("AUS-DOH-Safety-and-Quality/PowerBIAPI")
+```
+
+## Downloading Dataflow Tables
+
+
+```{r, eval=FALSE}
+df_table <- get_dataflow_table(workspace = "Workspace Name",
+                               dataflow = "Dataflow Name",
+                               table = "Table Name")
+```
+
+## Downloading Dataset Tables
+### XMLA
+
+```{r, eval=FALSE}
+ds_table <- get_dataset_table_xmla(workspace = "Workspace Name",
+                                   dataset = "Dataset Name",
+                                   table = "Table Name")
+```
+
+## Authentication
+
+`PowerBIAPI` uses the `AzureAuth` package for managing the authentication to PowerBI. By default, the functions will authenticate using either the permission level for the Azure PowerShell Modules (for dataflow table downloads) or the PowerBI PowerShell Modules (for dataset table downloads).
+
+To change the authentication defaults, simply use the `get_powerbi_token()` function to create a new `AzureAuth` object to pass to the functions. 
+
+For example, to use a Service Principal for authentication, first create the token object using the principal details and use that with the respective method:
+
+```{r, eval=FALSE}
+powerbi_token <- get_powerbi_token(
+  tenant_id = "",
+  application_id = "",
+  password = ""
+)
+
+ds_table <- get_dataset_table_xmla(workspace = "Workspace Name",
+                                   dataset = "Dataset Name",
+                                   table = "Table Name",
+                                   powerbi_token = powerbi_token)
+```

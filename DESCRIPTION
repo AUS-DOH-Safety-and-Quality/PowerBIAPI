@@ -1,0 +1,24 @@
+Package: PowerBIAPI
+Title: An R interface to REST & XMLA APIs for PowerBI Dataflows and Datasets
+Version: 0.0.0.9000
+Authors@R:
+    person(given = c("Andrew", "R."), family = "Johnson", role = c("aut", "cre"),
+          email = "andrew.johnson@arjohnsonau.com",
+          comment = c(ORCID = "0000-0001-7000-8065"))
+Description: The PowerBIAPI package provides a native R interface to the
+  PowerBI REST and XMLA APIs for accessing Dataflows and Datasets.
+  No external dependencies (e.g., PowerShell or the XMLA client libraries)
+  are required.
+Imports:
+  AzureAuth,
+  httr,
+  purrr,
+  readr,
+  glue,
+  jsonlite,
+  uuid,
+  xml2
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
